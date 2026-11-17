@@ -1,0 +1,19 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/Azure/azure-dev/main/schemas/v1.0/azure.yaml.json
+name: sre-agent-handson
+metadata:
+  template: sre-agent-handson@0.1.0
+services:
+  api:
+    project: ./app
+    host: appservice
+    # azd の Java ビルドは Maven 専用のため、Gradle でビルドした jar を custom として配置する
+    language: custom
+    dist: app/build/azd
+    hooks:
+      prepackage:
+        posix:
+          shell: sh
+          run: ./gradlew bootJar --no-daemon -q
+        windows:
+          shell: pwsh
+          run: .\gradlew.bat bootJar --no-daemon -q
