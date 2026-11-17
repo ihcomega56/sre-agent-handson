@@ -13,14 +13,17 @@ public class CouponService {
 			"VIP20", new BigDecimal("0.20"));
 
 	/**
-	 * クーポンコードに対応する割引率を返す。未指定・未知のコードは割引なし。
+	 * クーポンコードに対応する割引率を返す。未知のコードは割引なし。
 	 */
 	public BigDecimal discountRateFor(String couponCode) {
-		if (couponCode == null || couponCode.isBlank()) {
-			return BigDecimal.ZERO;
-		}
-		String normalized = couponCode.trim().toUpperCase(Locale.ROOT);
-		return DISCOUNT_RATES.getOrDefault(normalized, BigDecimal.ZERO);
+		return DISCOUNT_RATES.getOrDefault(normalize(couponCode), BigDecimal.ZERO);
+	}
+
+	/**
+	 * 全角スペースなどの前後の空白を除去し、大文字に揃える。
+	 */
+	private static String normalize(String couponCode) {
+		return couponCode.strip().toUpperCase(Locale.ROOT);
 	}
 
 }
